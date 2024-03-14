@@ -1,4 +1,2 @@
 .env
-./.idea
 /vendor
-./docker/mysql/datadir
