@@ -5,11 +5,11 @@ use Laminas\Diactoros\ServerRequestFactory;
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use UserRbacFramework\Route\AuraRouterAdapter;
 use UserRbacFramework\Route\Exeption\RequestNotMatchedException;
-use UserRbacFramework\Route\Router;
 use UserRbacFramework\ActionResolver;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
+require_once 'config/bootstrap.php';
 $routes = require 'config/route.php';
 
 
@@ -35,4 +35,3 @@ try {
 $emitter = new SapiEmitter();
 $emitter->emit($response);
 
-?>
