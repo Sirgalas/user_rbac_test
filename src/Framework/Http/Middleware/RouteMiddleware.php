@@ -26,6 +26,11 @@ class RouteMiddleware implements MiddlewareInterface
             foreach ($result->getAttributes() as $attribute => $value) {
                 $request = $request->withAttribute($attribute, $value);
             }
+            if($request->getMethod() === 'POST') {
+                foreach (json_decode(file_get_contents("php://input"), true) as $attribute => $value) {
+                    $request = $request->withAttribute($attribute, $value);
+                }
+            }
             return $handler->handle($request->withAttribute(Result::class, $result));
         } catch (RequestNotMatchedException $e) {
             return $handler->handle($request);

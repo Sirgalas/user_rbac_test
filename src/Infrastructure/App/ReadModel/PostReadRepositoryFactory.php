@@ -3,7 +3,7 @@
 namespace Infrastructure\App\ReadModel;
 
 use App\Entity\Post\Post;
-use App\ReadModel\PostReadRepository;
+use App\ReadModel\User\PostReadRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Psr\Container\ContainerInterface;

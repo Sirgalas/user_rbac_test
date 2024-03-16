@@ -39,8 +39,7 @@ final class Version20240316102123 extends AbstractMigration
                 CREATE TABLE IF NOT EXISTS user_groups (
                     user_id INT UNSIGNED NOT NULL, 
                     group_id INT UNSIGNED NOT NULL, 
-                    UNIQUE INDEX idx_user_groups_group_id (group_id), 
-                    UNIQUE INDEX idx_user_groups_user_id (user_id), 
+                    UNIQUE INDEX idx_user_groups_group_id_user_id (group_id,user_id), 
                     FOREIGN KEY (user_id) 
                         REFERENCES users_app(id)
                         ON DELETE CASCADE
@@ -58,8 +57,7 @@ final class Version20240316102123 extends AbstractMigration
                 role_id INT UNSIGNED NOT NULL, 
                 group_id INT UNSIGNED NOT NULL, 
                 is_blocked BOOLEAN DEFAULT false,
-                UNIQUE INDEX idx_role_groups_group_id (group_id), 
-                UNIQUE INDEX idx_role_groups_role_id (role_id), 
+                UNIQUE INDEX idx_role_groups_group_id_role_id (group_id,role_id),
                 FOREIGN KEY (role_id) 
                     REFERENCES roles_app(id)
                     ON DELETE CASCADE

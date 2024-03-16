@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Action\User\Get;
+namespace App\Http\Action\Group\Get;
 
-use App\ReadModel\User\UserDao;
+use App\ReadModel\Group\GroupDao;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -12,12 +12,10 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class Action implements RequestHandlerInterface
 {
-    /**
-     * @var UserDao
-     */
+
     private $dao;
 
-    public function __construct(UserDao $dao)
+    public function __construct(GroupDao $dao)
     {
         $this->dao = $dao;
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ReadModel\View;
+namespace App\ReadModel;
 
 class AbstractData
 {
@@ -37,7 +37,9 @@ class AbstractData
 
                 continue;
             }
-
+            if(is_int($property)) {
+                dd($properties);
+            }
             if (property_exists(static::class, $property)) {
                 $this->{$property} = $value; /* @phpstan-ignore-line */
             }
