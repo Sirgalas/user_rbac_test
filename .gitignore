@@ -1,4 +1,4 @@
-.env
 /vendor
-.idea
+/phpunit.xml
+.env
 /docker/mysql

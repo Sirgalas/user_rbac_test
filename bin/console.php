@@ -1,13 +1,38 @@
 #!/usr/bin/env php
 <?php
 
-require dirname(__DIR__).'/vendor/autoload.php';
-
+use Doctrine\DBAL\Migrations\Tools\Console\Helper\ConfigurationHelper;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Dotenv\Dotenv;
 
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
-$application = new Application();
+chdir(dirname(__DIR__));
 
-$application->add(new \Command\InitMigration(new \UserRbacFramework\DB\AbstractDao()));
-$application->run();
+require 'vendor/autoload.php';
+
+/**
+ * @var \Psr\Container\ContainerInterface $container
+ */
+$container = require 'config/container.php';
+
+$cli = new Application('Application console');
+
+$entityManager = $container->get(EntityManagerInterface::class);
+$connection = $entityManager->getConnection();
+
+$configuration = new Doctrine\DBAL\Migrations\Configuration\Configuration($connection);
+$configuration->setMigrationsDirectory('db/migrations');
+$configuration->setMigrationsNamespace('Migration');
+
+$cli->getHelperSet()->set(new EntityManagerHelper($entityManager), 'em');
+$cli->getHelperSet()->set(new ConfigurationHelper($connection, $configuration), 'configuration');
+
+Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($cli);
+
+$commands = $container->get('config')['console']['commands'];
+foreach ($commands as $command) {
+    $cli->add($container->get($command));
+}
+
+$cli->run();

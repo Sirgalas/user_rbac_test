@@ -1,37 +1,26 @@
 <?php
 
-use Laminas\Diactoros\Response\HtmlResponse;
-use Laminas\Diactoros\ServerRequestFactory;
-use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
-use UserRbacFramework\Route\AuraRouterAdapter;
-use UserRbacFramework\Route\Exeption\RequestNotMatchedException;
-use UserRbacFramework\ActionResolver;
+use Framework\Http\Application;
+use Symfony\Component\Dotenv\Dotenv;
+use Zend\Diactoros\Response\SapiEmitter;
+use Zend\Diactoros\ServerRequestFactory;
+
+/**
+ * @var \Psr\Container\ContainerInterface $container
+ * @var \Framework\Http\Application $app
+ */
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
-require_once 'config/bootstrap.php';
-$routes = require 'config/route.php';
 
 
-$router = new AuraRouterAdapter($routes);
-$resolver = new ActionResolver();
+$container = require 'config/container.php';
+$app = $container->get(Application::class);
+
+require 'config/pipeline.php';
+require 'config/routes.php';
 $request = ServerRequestFactory::fromGlobals();
-
-try {
-    $result = $router->match($request);
-    foreach ($result->getAttributes() as $attribute => $value) {
-        $request = $request->withAttribute($attribute, $value);
-    }
-    $handler = $result->getHandler();
-    /** @var callable $action */
-    $action = $resolver->resolve($result->getHandler());
-    $response = $action($request);
-} catch (RequestNotMatchedException $e){
-    $response = new HtmlResponse('Undefined page', 404);
-}
-
-
+$response = $app->handle($request);
 
 $emitter = new SapiEmitter();
 $emitter->emit($response);
-

@@ -1,4 +1,4 @@
-FROM php:8.1-fpm
+FROM php:7.4-fpm
 
 RUN apt-get update && \
     apt-get install -y wget git unzip libpq-dev libicu-dev libpng-dev libwebp-dev libzip-dev \
